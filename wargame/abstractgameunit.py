@@ -1,33 +1,11 @@
-"""wargame.abstractgameunit
-
-This module contains the AbstractGameUnit class implementation.
-
-This module is compatible with Python 2.7.9. It contains
-supporting code for the book, Learning Python Application Development,
-Packt Publishing.
-
-.. todo::
-
-   The code comments and function descriptions in this file are
-   intentionally kept to a minimum! See Chapter 4 of the book to
-   learn about the code documentation and best practices!
-
-:copyright: 2016, Ninad Sathaye
-
-:license: The MIT License (MIT) . See LICENSE file for further details.
-"""
-
-from __future__ import print_function
 import random
-from abc import ABCMeta, abstractmethod
-from gameutils import print_bold, weighted_random_selection
-from gameuniterror import GameUnitError
+from abc import ABCMeta,abstractmethod
+from gameutils import weighted_random_selection,print_bold
+from gameuniterror import HealthMeterException
 
 
-class AbstractGameUnit:
-    """Abstract class to represent a game character (or a 'unit')"""
-    __metaclass__ = ABCMeta
-
+class AbstractGameUnit(metaclass=ABCMeta):
+    """An Abstract base class for creating various game characters"""
     def __init__(self, name=''):
         self.max_hp = 0
         self.health_meter = 0
@@ -37,16 +15,11 @@ class AbstractGameUnit:
 
     @abstractmethod
     def info(self):
-        """Print information about this game unit.
-
-        Abstract method. See subclasses for implementation.
-        """
+        """Information on the unit (MUST be overridden in subclasses)"""
         pass
 
     def attack(self, enemy):
-        """The main logic to 'attack' the enemy unit
-
-        Determines injured unit and the amount of injury
+        """The main logic to determine injured unit and amount of injury
 
         .. todo:: Check if enemy exists!
         """
@@ -58,18 +31,31 @@ class AbstractGameUnit:
         enemy.show_health(end='  ')
 
     def heal(self, heal_by=2, full_healing=True):
-        """Heal the unit replenishing its hit points"""
+        """Heal the unit replenishing all the hit points"""
+        # try:
+        #     assert (self.health_meter + heal_by <= self.max_hp)
+        #     if self.health_meter == self.max_hp:
+        #         return
+        #
+        #     if full_healing:
+        #         self.health_meter = self.max_hp
+        #     else:
+        #         # TODO: Do you see a bug here? it can exceed max hit points!
+        #         self.health_meter += heal_by
+        # except AssertionError:
+        #     print("Invaild Input, heal_by: %s"%str(heal_by))
+        #     return
+
         if self.health_meter == self.max_hp:
             return
         if full_healing:
             self.health_meter = self.max_hp
         else:
             self.health_meter += heal_by
-        # ------------------------------------------------------------------
-        # raise a custom exception. Refer to chapter on exception handling
-        # ------------------------------------------------------------------
+
+        #raise a custom exception
         if self.health_meter > self.max_hp:
-            raise GameUnitError("health_meter > max_hp!", 101)
+            raise HealthMeterException("health_meter > max_hp!")
 
         print_bold("You are HEALED!", end=' ')
         self.show_health(bold=True)
@@ -79,7 +65,7 @@ class AbstractGameUnit:
         self.health_meter = self.max_hp
 
     def show_health(self, bold=False, end='\n'):
-        """Print info on the current health reading of this game unit"""
+        """Show the remaining hit points of the player and the enemy"""
         # TODO: what if there is no enemy?
         msg = "Health: %s: %d" % (self.name, self.health_meter)
 
@@ -87,4 +73,3 @@ class AbstractGameUnit:
             print_bold(msg, end=end)
         else:
             print(msg, end=end)
-

@@ -1,42 +1,8 @@
-"""wargame.attackoftheorcs
-
-This module contains the AttackOfTheOrcs class implementation.
-
-This is the main class with the high level logic to play Attack of the Orcs
-game.
-
-This module is compatible with Python 2.7.9. It contains
-supporting code for the book, Learning Python Application Development,
-Packt Publishing.
-
-.. todo::
-
-   The code comments and function descriptions in this file are
-   intentionally kept to a minimum! See Chapter 4 of the book to
-   learn about the code documentation and best practices!
-
-:copyright: 2016, Ninad Sathaye
-
-:license: The MIT License (MIT) . See LICENSE file for further details.
-"""
-
-from __future__ import print_function
-import sys
-
-if sys.version_info >= (3, 0):
-    print("This code requires Python 2.7.9 ")
-    print("Looks like you are trying to run this using "
-          "Python version: %d.%d " % (sys.version_info[0],
-                                      sys.version_info[1]))
-    print("Exiting...")
-    sys.exit(1)
-
-
-import random
-from hut import Hut
+from gameutils import print_bold
 from knight import Knight
 from orcrider import OrcRider
-from gameutils import print_bold
+from hut import Hut
+import random
 
 
 class AttackOfTheOrcs:
@@ -68,32 +34,32 @@ class AttackOfTheOrcs:
         idx = 0
         print("Current occupants: %s" % self.get_occupants())
         while verifying_choice:
-            user_choice = raw_input("Choose a hut number to enter (1-5): ")
-            # --------------------------------------------------------------
-            # try...except illustration for chapter on exception handling.
-            # (Attack Of The Orcs v1.1.0)
-            # --------------------------------------------------------------
+            user_choice = input("Choose a hut number to enter (1-5): ")
             try:
                 idx = int(user_choice)
+                assert idx in (i for i in range(1,6))
             except ValueError as e:
-                print("Invalid input, args: %s \n" % e.args)
+                print("Invaild Input, args: %s"%e.args)
                 continue
-
+            except AssertionError:
+                print("Invaild Input:",idx)
+                print("Number should be in the range 1-5. Try again")
+                continue
             try:
                 if self.huts[idx-1].is_acquired:
                     print("You have already acquired this hut. Try again."
-                     "<INFO: You can NOT get healed in already acquired hut.>")
+                          "<INFO: You can NOT get healed in already acquired hut.>")
                 else:
                     verifying_choice = False
-            except IndexError:
-                print("Invalid input : ", idx)
+            except  IndexError:
+                print("Invaild Input:",idx)
                 print("Number should be in the range 1-5. Try again")
                 continue
 
         return idx
 
     def _occupy_huts(self):
-        """Randomly occupy the huts with one of, friend, enemy or 'None'"""
+        """Randomly occupy the huts with one of: friend, enemy or 'None'"""
         for i in range(5):
             choice_lst = ['enemy', 'friend', None]
             computer_choice = random.choice(choice_lst)
@@ -124,7 +90,7 @@ class AttackOfTheOrcs:
             self.player.acquire_hut(self.huts[idx-1])
 
             if self.player.health_meter <= 0:
-                print_bold("YOU LOSE  :(  Better luck next time")
+                print_bold("YOU LOSE  :(  Better luck next time)")
                 break
 
             if self.huts[idx-1].is_acquired:

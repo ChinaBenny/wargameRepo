@@ -1,28 +1,7 @@
-"""wargame.hut
-
-This module contains the Hut class implementation.
-
-This module is compatible with Python 2.7.9. It contains
-supporting code for the book, Learning Python Application Development,
-Packt Publishing.
-
-.. todo::
-
-   The code comments and function descriptions in this file are
-   intentionally kept to a minimum! See Chapter 4 of the book to
-   learn about the code documentation and best practices!
-
-:copyright: 2016, Ninad Sathaye
-
-:license: The MIT License (MIT) . See LICENSE file for further details.
-"""
-
-from __future__ import print_function
 from gameutils import print_bold
 
-
 class Hut:
-    """Class to create hut objects in the game Attack of the Orcs"""
+    """Class to create hut object(s) in the game Attack of the Orcs"""
     def __init__(self, number, occupant):
         self.occupant = occupant
         self.number = number
@@ -44,4 +23,3 @@ class Hut:
             occupant_type = self.occupant.unit_type
 
         return occupant_type
-

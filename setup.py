@@ -3,18 +3,17 @@ from distutils.core import setup
 with open('README') as file:
     readme = file.read()
 
-# NOTE: change the 'name' field below with some unique package name.
-# then update the url field accordingly.
-
 setup(
-    name='benny_wargamepkg_private',
-    version='2.0.0',
+    name='benny-orcattack-game',
+    version='2.1.1',
     packages=['wargame'],
-    url='http://localhost:8081/simple',
+    url='https://test.pypi.org/project/benny-orcattack-game/',
     license='LICENSE.txt',
-    description='test pkg private',
+    description='Benny coding the first fantasy game ',
     long_description=readme,
-    author='benny',
+    author='Benny',
     author_email='1058619984@qq.com'
+
 )
+
 
